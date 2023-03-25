@@ -1,0 +1,15 @@
+bin/
+obj/
+*.exe
+*.dll
+*.pdb
+*.user
+*.vs/
+.vscode/
+.idea/
+*.suo
+*.cache
+*.log
+node_modules/
+packages/
+.DS_Store
