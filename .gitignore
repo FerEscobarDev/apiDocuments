@@ -13,3 +13,8 @@ obj/
 node_modules/
 packages/
 .DS_Store
+obj/apiDocuments.csproj.nuget.dgspec.json
+obj/apiDocuments.csproj.nuget.dgspec.json
+obj/apiDocuments.csproj.nuget.dgspec.json
+obj/Debug/net6.0/apiDocuments.assets.cache
+obj/project.assets.json

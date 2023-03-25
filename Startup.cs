@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace apiDocuments
 {
@@ -14,6 +16,7 @@ namespace apiDocuments
         public void ConfigureServices(IServiceCollection services) //Se configuran los servicios
         {
             services.AddControllers();
+            services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(Configuration.GetConnectionString("MySqlConnection"), new MySqlServerVersion(new Version(8, 0, 30))));
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
         }
@@ -30,7 +33,6 @@ namespace apiDocuments
 
             app.UseRouting();
 
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
