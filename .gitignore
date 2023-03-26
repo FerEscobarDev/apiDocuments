@@ -18,3 +18,7 @@ obj/apiDocuments.csproj.nuget.dgspec.json
 obj/apiDocuments.csproj.nuget.dgspec.json
 obj/Debug/net6.0/apiDocuments.assets.cache
 obj/project.assets.json
+wwwroot/
+Migrations/20230326034219_Initial.cs
+Migrations/ApplicationDbContextModelSnapshot.cs
+Migrations/20230326034219_Initial.Designer.cs
