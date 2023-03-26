@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using apiDocuments.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace apiDocuments
 {
@@ -10,5 +11,6 @@ namespace apiDocuments
 
         //Aquí van los modelos de las tablas que se van a crear
         //public DbSet<NombreModelo> NombreModeloPlural { get; set; }
+        public DbSet<Document> Documents { get; set; }
     }
 }
