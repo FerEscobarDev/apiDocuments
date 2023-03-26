@@ -13,7 +13,6 @@ namespace apiDocuments.Models
         public string Extension { get; set; }
         [Required]
         public string MimeType { get; set; }
-        [Required]
-        public string DocumentUrl { get; set; }
+        public string DocumentFile { get; set; }
     }
 }
