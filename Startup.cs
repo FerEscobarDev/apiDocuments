@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using apiDocuments.Services;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -15,6 +16,9 @@ namespace apiDocuments
 
         public void ConfigureServices(IServiceCollection services) //Se configuran los servicios
         {
+            services.AddAutoMapper(typeof(Startup));
+            services.AddTransient<IFileStorage, LocalFileStorage>();
+            services.AddHttpContextAccessor();
             services.AddControllers();
             services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(Configuration.GetConnectionString("MySqlConnection"), new MySqlServerVersion(new Version(8, 0, 30))));
             services.AddEndpointsApiExplorer();
@@ -30,6 +34,8 @@ namespace apiDocuments
             }
 
             app.UseHttpsRedirection();
+
+            app.UseStaticFiles(); //Para permitir ver los archivos en local
 
             app.UseRouting();
 
