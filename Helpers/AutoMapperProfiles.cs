@@ -9,7 +9,9 @@ namespace apiDocuments.Helpers
         public AutoMapperProfiles()
         {
             CreateMap<Document, DocumentDTO>().ReverseMap();
-            CreateMap<DocumentCreateDTO, Document>().ForMember(x => x.DocumentFile, options => options.Ignore());
+            CreateMap<DocumentCreateDTO, Document>();
+
+            CreateMap<DocumentPutDTO, Document>().ForMember(x => x.DocumentFile, options => options.Ignore());
         }
     }
 }
