@@ -6,6 +6,12 @@ namespace apiDocuments.DTOs
     {
         public int Id { get; set; }
         [Required]
+        public string OriginalName { get; set; }
+        [Required]
+        public string Extension { get; set; }
+        [Required]
+        public string MimeType { get; set; }
+        [Required]
         public string DocumentFile { get; set; }
     }
 }
