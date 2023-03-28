@@ -4,6 +4,7 @@ using apiDocuments.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+//using System.Reflection.Metadata;
 
 namespace apiDocuments.Controllers
 {
@@ -46,13 +47,13 @@ namespace apiDocuments.Controllers
         [HttpPost(Name = "storeDocument")]
         public async Task<ActionResult> Post([FromForm] DocumentCreateDTO documentCreateDTO)
         {
-            //var documentExist = await context.Documents.AnyAsync(documentDb => documentDb.CustomName == document.CustomName);
+            var documentExist = await context.Documents.AnyAsync(documentDb => documentDb.CustomName == documentCreateDTO.CustomName);
 
-            //if(documentExist) 
-            //{  
-            //    return BadRequest($"Ya existe un documento con el nombre personalizado {document.CustomName}"); 
-            //}
-            
+            if (documentExist)
+            {
+                return BadRequest($"Ya existe un documento con el nombre personalizado {documentCreateDTO.CustomName}");
+            }
+
             var document = mapper.Map<Document>(documentCreateDTO);
 
             if(documentCreateDTO.DocumentFile != null) 
@@ -75,21 +76,21 @@ namespace apiDocuments.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public async Task<ActionResult> Put(int id, [FromForm] DocumentCreateDTO documentCreateDTO)
+        public async Task<ActionResult> Put(int id, [FromForm] DocumentPutDTO documentPutDTO)
         {
             var document =  await context.Documents.FirstOrDefaultAsync(documentDb => documentDb.Id == id);
             if (document == null) { return NotFound(); }
 
-            document = mapper.Map(documentCreateDTO, document);
+            document = mapper.Map(documentPutDTO, document);//De esta forma sólo se actualizarán lo campos con cambios
 
-            if (documentCreateDTO.DocumentFile != null)
+            if (documentPutDTO.DocumentFile != null)
             {
                 using (var memoryStream = new MemoryStream())//Extraer arreglo de bite de IformFile
                 {
-                    await documentCreateDTO.DocumentFile.CopyToAsync(memoryStream);
+                    await documentPutDTO.DocumentFile.CopyToAsync(memoryStream);
                     var data = memoryStream.ToArray();
-                    var extension = Path.GetExtension(documentCreateDTO.DocumentFile.FileName);
-                    document.DocumentFile = await fileStorage.EditFile(data, extension, container, document.DocumentFile, documentCreateDTO.DocumentFile.ContentType);
+                    var extension = Path.GetExtension(documentPutDTO.DocumentFile.FileName);
+                    document.DocumentFile = await fileStorage.EditFile(data, extension, container, document.DocumentFile, documentPutDTO.DocumentFile.ContentType);
                 }
             }
 
@@ -100,13 +101,15 @@ namespace apiDocuments.Controllers
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var documentExist = await context.Documents.AnyAsync(documentDb => documentDb.Id == id);
-            if (!documentExist)
+            var document = await context.Documents.FirstOrDefaultAsync(documentDb => documentDb.Id == id);
+            if (document == null) { return NotFound(); }
+
+            if (document.DocumentFile != null)
             {
-                return NotFound();
+                await fileStorage.DeleteFile(document.DocumentFile, container);
             }
 
-            context.Remove(new  Document { Id = id });
+            context.Remove(document);
             await context.SaveChangesAsync();
 
             return NoContent();
