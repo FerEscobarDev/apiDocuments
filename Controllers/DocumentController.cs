@@ -64,6 +64,9 @@ namespace apiDocuments.Controllers
                     var data = memoryStream.ToArray();
                     var extension = Path.GetExtension(documentCreateDTO.DocumentFile.FileName);
                     document.DocumentFile = await fileStorage.SaveFile(data, extension, container, documentCreateDTO.DocumentFile.ContentType);
+                    document.Extension = extension.Substring(1);
+                    document.OriginalName = documentCreateDTO.DocumentFile.FileName;
+                    document.MimeType = documentCreateDTO.DocumentFile.ContentType;
                 }
             }
 
@@ -91,6 +94,9 @@ namespace apiDocuments.Controllers
                     var data = memoryStream.ToArray();
                     var extension = Path.GetExtension(documentPutDTO.DocumentFile.FileName);
                     document.DocumentFile = await fileStorage.EditFile(data, extension, container, document.DocumentFile, documentPutDTO.DocumentFile.ContentType);
+                    document.Extension = extension.Substring(1);
+                    document.OriginalName = documentPutDTO.DocumentFile.FileName;
+                    document.MimeType = documentPutDTO.DocumentFile.ContentType;
                 }
             }
 
