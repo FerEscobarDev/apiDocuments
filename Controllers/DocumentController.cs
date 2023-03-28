@@ -25,9 +25,29 @@ namespace apiDocuments.Controllers
         }
 
         [HttpGet(Name = "getDocuments")]
-        public async Task<ActionResult<List<DocumentDTO>>> Get()
+        public async Task<ActionResult<List<DocumentDTO>>> Get([FromQuery] FilterDocumentsDTO filterDocumentsDTO)
         {
-            var documents = await context.Documents.ToListAsync();
+            var documentsqQuery = context.Documents.AsQueryable();
+
+            if (!string.IsNullOrEmpty(filterDocumentsDTO.CustomName))
+            {
+                documentsqQuery = documentsqQuery.Where(documentDb => documentDb.CustomName.Contains(filterDocumentsDTO.CustomName));
+            }
+            if (!string.IsNullOrEmpty(filterDocumentsDTO.OriginalName))
+            {
+                documentsqQuery = documentsqQuery.Where(documentDb => documentDb.OriginalName.Contains(filterDocumentsDTO.OriginalName));
+            }
+            if (!string.IsNullOrEmpty(filterDocumentsDTO.Extension))
+            {
+                documentsqQuery = documentsqQuery.Where(documentDb => documentDb.Extension.Contains(filterDocumentsDTO.Extension));
+            }
+            if (!string.IsNullOrEmpty(filterDocumentsDTO.MimeType))
+            {
+                documentsqQuery = documentsqQuery.Where(documentDb => documentDb.MimeType.Contains(filterDocumentsDTO.MimeType));
+            }
+
+
+            var documents = await documentsqQuery.ToListAsync();
             var dtoDocuments = mapper.Map<List<DocumentDTO>>(documents);
             return dtoDocuments;
         }
